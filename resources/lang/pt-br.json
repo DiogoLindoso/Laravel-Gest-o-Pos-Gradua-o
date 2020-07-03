@@ -1,0 +1,15 @@
+{
+    "welcome" : "Bem-vindo ao nosso aplicativo",
+    "Name" : "Nome",
+    "Register" : "Registrar",
+    "Password" : "Senha",
+    "Confirm Password" : "Confimar Senha",
+    "E-Mail Address" : "Endereço de E-mail",
+    "Remember Me" : "Lembre de Mim",
+    "Forgot Your Password?" : "Perdeu sua Senha?",
+    "failed" : "Essas credenciais não correspondem aos nossos registros.",
+    "throttle":"Muitas tentativas de login. Tente novamente em :seconds segundos.",
+    "previous" : "&laquo; Anterior",
+    "next" : "Próxima &raquo;",
+    "Logout" : "Sair"
+}
