@@ -15,7 +15,7 @@ class CheckPermission
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user != auth()->user()) {
+        if ($request->user != auth()->user()->id) {
             return redirect('/home');
         }
         return $next($request);

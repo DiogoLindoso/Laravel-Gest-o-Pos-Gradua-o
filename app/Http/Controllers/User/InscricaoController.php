@@ -8,6 +8,10 @@ use App\Inscricao;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreInscricao;
 use Illuminate\Support\Facades\Storage;
+use App\Curso;
+use App\Pais;
+use App\Estado;
+use App\Turma;
 
 class InscricaoController extends Controller
 {
@@ -30,9 +34,16 @@ class InscricaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(User $user)
     {
-        //
+        //$user =auth()->user()->id;
+        $cursos =  Curso::all()->sortBy('nome');
+        $paises = Pais::all()->sortBy('nome');
+        $estados = Estado::all()->sortBy('nome');
+        $turmas = Turma::where('curso_id',1)->get();
+        $cotas = Curso::with('cotas')->get();
+
+        return view('user.inscricao',compact(['estados','turmas','cotas','paises','cursos','user']));
     }
 
     /**

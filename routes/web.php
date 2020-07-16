@@ -22,19 +22,9 @@ Route::middleware(['auth'])->prefix('/home')->group( function(){
         $inscricao =auth()->user()->inscricao;
         return view('user/home',compact(['inscricao']));
     });
-    Route::get('/inscricao',function(){
-        $user =auth()->user()->id;
-        $cursos =  App\Curso::all()->sortBy('nome');
-        $paises = App\Pais::all()->sortBy('nome');
-        $estados = App\Estado::all()->sortBy('nome');
-        $turmas = App\Turma::where('curso_id',1)->get();
-        $cotas = App\Curso::with('cotas')->get();
-
-        return view('user/inscricao',compact(['estados','turmas','cotas','paises','cursos','user']));
-    })->name('inscricao.show');
     Route::resource('documento', 'User\\DocumentoController')->only(['store','update', 'show'])->names('doc')->parameters(['documento'=>'user']);
     Route::resource('endereco', 'User\\EnderecoController')->only(['store','update','show'])->names('adress')->parameters(['endereco'=>'user']);
-    Route::resource('inscricao', 'User\\InscricaoController')->only(['store','update','show'])->names('reg')->parameters(['inscricao'=>'user']);
+    Route::resource('inscricao', 'User\\InscricaoController')->only(['create','store','show'])->names('inscricao')->parameters(['inscricao'=>'user']);
     Route::get('/estados/{pais}', 'FilterSelectController@estados')->name('estados.get');
     Route::get('/municipios/{estado}', 'FilterSelectController@municipios')->name('municipios.get');
     Route::get('/municipiogetestado/{municipio}', 'FilterSelectController@municipioGetEstado')->name('municipioestado.get');
