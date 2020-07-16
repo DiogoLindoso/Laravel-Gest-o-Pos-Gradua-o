@@ -15,7 +15,7 @@
             @endempty
 
           <div class="row mb-3 ml-1">
-            <a href="#" class="btn btn-primary col col-md-3">Visualizar Inscrição</a>
+            <a href="{{route('inscricao.show',['user'=>Auth::user()])}}" class="btn btn-primary col col-md-3">Visualizar Inscrição</a>
           </div>
           <form action="{{route('password.request')}}" method="GET">
             @csrf

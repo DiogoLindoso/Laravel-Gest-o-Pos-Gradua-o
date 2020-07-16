@@ -17,7 +17,7 @@ class InscricaoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission',['except'=>['store']]);
+        $this->middleware('permission',['except'=>['store','create']]);
     }
     /**
      * Display a listing of the resource.
@@ -34,9 +34,9 @@ class InscricaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(User $user)
+    public function create()
     {
-        //$user =auth()->user()->id;
+        $user =auth()->user()->id;
         $cursos =  Curso::all()->sortBy('nome');
         $paises = Pais::all()->sortBy('nome');
         $estados = Estado::all()->sortBy('nome');
