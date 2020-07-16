@@ -7,19 +7,12 @@
             Area do candidato
         </div>
         <div class="card-body">
-            <h5 class="card-title ml-1">Bem vindo !</h5>
-            @isset($inscricao)
-            {{$inscricao->user_id}}
-            <div class="row mb-3 ml-1">
-                <a href="#" class="btn btn-primary col col-md-3">Editar Inscrição {{$inscricao->id}}</a>
-              </div>
-            @endisset
-
-            {{--@empty($inscricao)--}}
+            <h5 class="card-title ml-1">Bem vindo ! {{Auth::user()->documento->nome}}</h5>
+            @empty($inscricao->id)
             <div class="row mb-3 ml-1">
                 <a href="{{route('inscricao.show')}}" class="btn btn-primary col col-md-3">Realizar Inscrição</a>
               </div>
-            {{--@endempty--}}
+            @endempty
 
 
           <div class="row mb-3 ml-1">
