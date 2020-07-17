@@ -30,6 +30,11 @@
         <p class="card-text">Celular : {{$user->endereco->celular}} </p>
         <p class="card-text">Telefone fixo : {{$user->endereco->telefone_fixo}} </p>
         <hr>
+        <p class="card-text">Turma : {{$user->inscricao->turma->municipio->nome}} </p>
+        <p class="card-text">Cota : {{$user->inscricao->cota->nome}} </p>
+        <p class="card-text">Curso : {{$user->inscricao->curso->nome}} </p>
+        <p class="card-text">Tempo de serviço : {{$user->inscricao->tempo_servico_dias}} dias </p>
+
     </div>
   </div>
   <div class="row">
