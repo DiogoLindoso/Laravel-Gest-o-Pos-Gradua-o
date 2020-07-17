@@ -30,8 +30,6 @@ class Documento extends Model
     public function user()
     {
         return $this::belongsTo('App\User');
-
-            
     }
     public function nascimento()
     {
@@ -39,6 +37,10 @@ class Documento extends Model
     }
     public function tituloMunicipio()
     {
-        return $this->belongsTo('App\Municipio', 'titulo_municipio', 'id');
+        return $this::belongsTo('App\Municipio', 'titulo_municipio', 'id');
+    }
+    public function estado()
+    {
+        return $this::belongsTo('App\Estado', 'uf_documento', 'id');
     }
 }

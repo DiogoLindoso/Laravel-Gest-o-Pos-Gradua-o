@@ -89,7 +89,8 @@ class InscricaoController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user->inscricao);
+       // return response()->json($user->inscricao);
+       return view('user.comprovante',compact(['user']));
     }
 
     /**
