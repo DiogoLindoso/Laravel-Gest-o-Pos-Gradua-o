@@ -54,4 +54,5 @@ Route::middleware(['auth:admin'])->prefix('/admin')->group( function () {
     Route::post('/turma/edit/{turma}', 'Admin\TurmaController@edit')->name('admin.turma.edit.save');
     Route::get('/turma/destroy/{turma}','Admin\TurmaController@destroy')->name('admin.turma.destroy');
     Route::get('/municipios/{estado}', 'FilterSelectController@municipios')->name('estados.get');
+    Route::get('/relatorio', 'Admin\RelatorioController@index')->name('admin.relatorio');
 });
