@@ -13,10 +13,11 @@
                 <a href="{{route('inscricao.create',['user'=>Auth::user()])}}" class="btn btn-primary col col-md-3">Realizar Inscrição</a>
               </div>
             @endempty
-
-          <div class="row mb-3 ml-1">
-            <a href="{{route('inscricao.show',['user'=>Auth::user()])}}" class="btn btn-primary col col-md-3">Visualizar Inscrição</a>
-          </div>
+            @isset(Auth::user()->inscricao)
+                <div class="row mb-3 ml-1">
+                    <a href="{{route('inscricao.show',['user'=>Auth::user()])}}" class="btn btn-primary col col-md-3">Visualizar Inscrição</a>
+                </div>
+            @endisset
           <form action="{{route('password.request')}}" method="GET">
             @csrf
             <div class="row mb-3 ml-1">
