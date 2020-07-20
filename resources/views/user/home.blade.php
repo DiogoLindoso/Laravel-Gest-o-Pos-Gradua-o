@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <h5 class="card-title ml-1">Bem vindo !</h5>
-            @empty($inscricao->id)
+            @empty(Auth::user()->inscricao)
             <div class="row mb-3 ml-1">
                 <a href="{{route('inscricao.create',['user'=>Auth::user()])}}" class="btn btn-primary col col-md-3">Realizar Inscrição</a>
               </div>

@@ -16,7 +16,7 @@
                         @endif
 
                         Você está logado como Administrador!<br>
-                        <a href="{{route('admin.cotas')}}">Cadastro de cotas</a>
+                        <a href="{{route('cotas.index')}}">Cadastro de cotas</a>
                     </div>
                 </div>
             </div>

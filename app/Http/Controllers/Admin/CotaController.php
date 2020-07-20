@@ -20,29 +20,21 @@ class CotaController extends Controller
             'prioridade' => 'required'
         ]);
         $cota = new Cota();
-        $cota->nome = $request->input('nome');
-        $cota->descricao = $request->input('descricao');
-        $cota->prioridade = $request->input('prioridade');
-        $cota->save();
-        return redirect()->route('admin.cotas');
+        $cota->fill($request->all())->save();
+        return redirect()->route('cotas.index');
     }
-    public function view(Cota $cota)
+    public function edit(Cota $cota)
     {   
         return view('admin/cotas-edit',compact('cota'));
     }
-    public function edit(Request $request)
+    public function update(Request $request, Cota $cota)
     {
-        $cota = new Cota();
-        $cota = $cota::find($request->cota);
-        $cota->nome = $request->input('nome');
-        $cota->descricao = $request->input('descricao');
-        $cota->prioridade = $request->input('prioridade');
-        $cota->save();
-        return redirect()->route('admin.cotas');
+        $cota->fill($request->all())->save();
+        return redirect()->route('cotas.index');
     }
     public function destroy(Cota $cota)
     {
         $cota->delete();
-        return redirect()->route('admin.cotas');
+        return redirect()->route('cotas.index');
     }
 }

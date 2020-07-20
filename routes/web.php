@@ -13,15 +13,10 @@
 
 Auth::routes();
 
-Route::get('/', function () {
-    return view('inicio');
-});
+Route::view('/', 'inicio');
 
 Route::middleware(['auth'])->prefix('/home')->group( function(){
-    Route::get('/',function(){
-        $inscricao =auth()->user()->inscricao;
-        return view('user/home',compact(['inscricao']));
-    });
+    Route::view('/', 'user.home');
     Route::resource('documento', 'User\\DocumentoController')->only(['store','update', 'show'])->names('doc')->parameters(['documento'=>'user']);
     Route::resource('endereco', 'User\\EnderecoController')->only(['store','update','show'])->names('adress')->parameters(['endereco'=>'user']);
     Route::resource('inscricao', 'User\\InscricaoController')->only(['create','store','show'])->names('inscricao')->parameters(['inscricao'=>'user']);
@@ -35,12 +30,8 @@ Route::get('admin/login', 'Auth\AdminLoginController@index')->name('admin.login'
 Route::post('admin/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
 
 Route::middleware(['auth:admin'])->prefix('/admin')->group( function () {
-    Route::get('/', 'Admin\AdminController@index')->name('admin.dashboard');
-    Route::get('/cotas', 'Admin\CotaController@index')->name('admin.cotas');
-    Route::post('/cotas', 'Admin\CotaController@store')->name('cota.submit');
-    Route::get('/cotas/edit/{cota}', 'Admin\CotaController@view')->name('cota.edit');
-    Route::post('/cotas/edit/{cota}', 'Admin\CotaController@edit')->name('cota.edit.save');
-    Route::get('/cotas/destroy/{cota}', 'Admin\CotaController@destroy')->name('cota.destroy');
+    Route::view('/', 'admin/admin')->name('admin.dashboard');
+    Route::resource('/cotas', 'Admin\CotaController')->except(['show'])->names('cotas');
     Route::get('/cursos', 'Admin\CursoController@index')->name('admin.cursos');
     Route::post('/cursos', 'Admin\CursoController@store')->name('curso.submit');
     Route::get('/cursos/edit/{curso}', 'Admin\CursoController@view')->name('curso.edit');

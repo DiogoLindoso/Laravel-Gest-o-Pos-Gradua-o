@@ -55,10 +55,20 @@
                                                 {{$cota->prioridade}}
                                             </td>
                                             <td>
-                                            <a class="btn btn-primary" href="{{route('cota.edit',['cota'=>$cota->id])}}" role="button">
-                                                    Editar
-                                            </a>
-                                                <a class="btn btn-danger" href="{{route('cota.destroy',['cota'=>$cota->id])}}" role="button" >Apagar</button>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <a class="btn btn-primary" href="{{route('cotas.edit',['cota'=>$cota->id])}}" role="button">
+                                                        Editar
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <form action="{{route('cotas.destroy',['cota'=>$cota])}}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="submit" class="btn btn-danger" value="Apagar" >
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -83,7 +93,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('cota.submit') }}">
+                        <form method="POST" action="{{ route('cotas.store') }}">
                             @csrf
                             
                             <div class="form-group row">
