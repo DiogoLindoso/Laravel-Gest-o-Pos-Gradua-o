@@ -26,21 +26,20 @@ class TurmaController extends Controller
         $turma->save();
         return redirect()->back();
     }
-    public function view(Turma $turma)
+    public function edit(Turma $turma)
     {
         return view('admin/turma-edit',compact('turma'));
     }
-    public function edit(Request $request)
+    public function update(Request $request, Turma $turma)
     {
-        $turma = Turma::find($request->turma);
         $turma->nome = $request->nome;
         $turma->vagas = $request->vagas;
         $turma->save();
-        return redirect()->route('admin.turmas');
+        return redirect()->route('turmas.index');
     }
     public function destroy(Turma $turma)
     {
         $turma->delete();
-        return redirect()->route('admin.turmas');
+        return redirect()->route('turmas.index');
     }
 }

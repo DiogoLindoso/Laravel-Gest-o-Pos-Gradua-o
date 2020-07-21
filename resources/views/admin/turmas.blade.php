@@ -59,11 +59,21 @@
                                                 {{$turma->curso->nome}}
                                             </td>
                                             <td>
-                                                <a class="btn btn-primary" href="{{route('admin.turma.edit',['turma'=>$turma->id])}}" role="button">
-                                                        Editar
-                                                </a>
-                                                    <a class="btn btn-danger" href="{{route('admin.turma.destroy',['turma'=>$turma->id])}}" role="button" >Apagar</button>
-                                                </td>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <a class="btn btn-primary" href="{{route('turmas.edit',['turma'=>$turma])}}" role="button">
+                                                            Editar
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <form action="{{route('turmas.destroy',['turma'=>$turma])}}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="submit" class="btn btn-danger" role="button" value="Apagar">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -85,7 +95,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('admin.turmas.submit') }}">
+                        <form method="POST" action="{{ route('turmas.store') }}">
                             @csrf
                             <div class="form-group row">
                                 <label class="col-md-2 col-form-label text-md-right">Curso</label>

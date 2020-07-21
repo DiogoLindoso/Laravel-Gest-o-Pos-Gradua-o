@@ -31,15 +31,12 @@ Route::post('admin/login', 'Auth\AdminLoginController@login')->name('admin.login
 
 Route::middleware(['auth:admin'])->prefix('/admin')->group( function () {
     Route::view('/', 'admin/admin')->name('admin.dashboard');
-    Route::resource('/cotas', 'Admin\CotaController')->except(['show']);
-    Route::resource('/cursos','Admin\CursoController')->except(['show']);
+    Route::resource('/cotas', 'Admin\CotaController')->except(['show','create']);
+    Route::resource('/cursos','Admin\CursoController')->except(['show','create']);
+    Route::resource('/turmas','Admin\TurmaController')->except(['show','create']);
     Route::get('/alunos', 'Admin\AlunoController@index')->name('admin.alunos');
     Route::get('/alunos/turma/{turma}', 'Admin\AlunoController@turma')->name('admin.turma.get');
-    Route::get('/turmas', 'Admin\TurmaController@index')->name('admin.turmas');
-    Route::post('/turmas','Admin\TurmaController@store')->name('admin.turmas.submit');
-    Route::get('/turma/edit/{turma}', 'Admin\TurmaController@view')->name('admin.turma.edit');
-    Route::post('/turma/edit/{turma}', 'Admin\TurmaController@edit')->name('admin.turma.edit.save');
-    Route::get('/turma/destroy/{turma}','Admin\TurmaController@destroy')->name('admin.turma.destroy');
+
     Route::get('/municipios/{estado}', 'FilterSelectController@municipios')->name('estados.get');
     Route::get('/relatorio', 'Admin\RelatorioController@index')->name('admin.relatorio');
     Route::get('/relatorio/excel', 'ExportExcelController@excel')->name('admin.migracao');

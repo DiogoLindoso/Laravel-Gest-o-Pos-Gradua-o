@@ -11,9 +11,9 @@
                 </div>
                 <div class="card-body">
                     @isset($turma)
-                        <form method="POST" action="{{route('admin.turma.edit.save', ['turma' => $turma->id ])}}">
+                        <form method="POST" action="{{route('turmas.update', ['turma' => $turma])}}">
                             @csrf
-
+                            @method('PUT')
                             <div class="form-group row">
                                 <label class="col-md-2 col-form-label text-md-right">Curso</label>
                                 <div class="col-md-8">
