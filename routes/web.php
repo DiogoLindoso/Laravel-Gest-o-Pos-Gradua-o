@@ -31,12 +31,8 @@ Route::post('admin/login', 'Auth\AdminLoginController@login')->name('admin.login
 
 Route::middleware(['auth:admin'])->prefix('/admin')->group( function () {
     Route::view('/', 'admin/admin')->name('admin.dashboard');
-    Route::resource('/cotas', 'Admin\CotaController')->except(['show'])->names('cotas');
-    Route::get('/cursos', 'Admin\CursoController@index')->name('admin.cursos');
-    Route::post('/cursos', 'Admin\CursoController@store')->name('curso.submit');
-    Route::get('/cursos/edit/{curso}', 'Admin\CursoController@view')->name('curso.edit');
-    Route::post('/cursos/edit/{curso}', 'Admin\CursoController@edit')->name('curso.edit.save');
-    Route::get('/cursos/destroy/{curso}', 'Admin\CursoController@destroy')->name('curso.destroy');
+    Route::resource('/cotas', 'Admin\CotaController')->except(['show']);
+    Route::resource('/cursos','Admin\CursoController')->except(['show']);
     Route::get('/alunos', 'Admin\AlunoController@index')->name('admin.alunos');
     Route::get('/alunos/turma/{turma}', 'Admin\AlunoController@turma')->name('admin.turma.get');
     Route::get('/turmas', 'Admin\TurmaController@index')->name('admin.turmas');

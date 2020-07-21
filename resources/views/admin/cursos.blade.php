@@ -47,10 +47,22 @@
                                                 {{$curso->nome}}
                                             </td>
                                             <td>
-                                            <a class="btn btn-primary" href="{{route('curso.edit',['curso'=>$curso->id])}}" role="button">
-                                                    Editar
-                                            </a>
-                                                <a class="btn btn-danger" href="{{route('curso.destroy',['curso'=>$curso->id])}}" role="button" >Apagar</button>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <a class="btn btn-primary" href="{{route('cursos.edit',['curso'=>$curso])}}" role="button">
+                                                            Editar
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <form action="{{route('cursos.destroy',['curso'=>$curso])}}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="submit" class="btn btn-danger" role="button"  value="Apagar">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
@@ -75,7 +87,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('curso.submit') }}">
+                        <form method="POST" action="{{ route('cursos.store') }}">
                             @csrf
                             
                             <div class="form-group row">

@@ -11,8 +11,9 @@
                 </div>
                 <div class="card-body">
                     @isset($curso)
-                        <form method="POST" action="{{route('curso.edit.save',['curso'=>$curso->id])}}">
+                        <form method="POST" action="{{route('cursos.update',['curso'=>$curso->id])}}">
                             @csrf
+                            @method('PUT')
 
                             <div class="form-group row">
                                 <label class="col-md-2 col-form-label text-md-right">Nome</label>

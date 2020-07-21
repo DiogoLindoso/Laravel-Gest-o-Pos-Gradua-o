@@ -20,25 +20,21 @@ class CursoController extends Controller
             'nome' => 'required'
         ]);
         $curso = new Curso();
-        $curso->nome = $request->input('nome');
-        $curso->save();
-        return redirect()->route('admin/admin.cursos');
+        $curso->fill($request->all())->save();
+        return redirect()->route('cursos.index');
     }
-    public function view(Curso $curso)
+    public function edit(Curso $curso)
     {   
         return view('admin/curso-edit',compact('curso'));
     }
-    public function edit(Request $request)
+    public function update(Request $request, Curso $curso)
     {
-        $curso = new Curso();
-        $curso = $curso::find($request->curso);
-        $curso->nome = $request->input('nome');
-        $curso->save();
-        return redirect()->route('admin.cursos');
+        $curso->fill($request->all())->save();
+        return redirect()->route('cursos.index');
     }
     public function destroy(Curso $curso)
     {
         $curso->delete();
-        return redirect()->route('admin.cursos');
+        return redirect()->route('cursos.index');
     }
 }
