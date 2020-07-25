@@ -3,7 +3,7 @@
 namespace App\Exports;
 
 use DB;
-use App\Inscricao;
+use App\Turma;
 use Maatwebsite\Excel\Concerns\FromArray;
 
 class MatriculaExport implements FromArray
@@ -13,55 +13,86 @@ class MatriculaExport implements FromArray
      */
     public function array(): array
     {
-        $matriculaData = $this->consultaMatricula();
-        return $this->getMatriculaArray($matriculaData);
+        $matriculaData = $this->getMatriculas();
+        return $this->prepareToExport($matriculaData);
     }
 
-    private function consultaMatricula(): array
+    /**
+     * Classifica os inscritos de acordo com a quantidade de vagas da turma
+     * ordenando por tempo de serviço, cota e nome
+     *
+     * @param Turma $turma
+     * @return array
+     **/
+    private function classificaInscritos(Turma $turma): array
     {
         $matriculaData = DB::table('inscricoes as i')
-        ->join('users as u', 'u.id', '=', 'i.user_id')
-        ->join ('enderecos as e', 'u.id', '=', 'e.user_id')
-        ->join('documentos as d', 'u.id', '=', 'd.user_id')
-        ->join('cotas as cot','cot.id', '=', 'i.cota_id')
-        ->join('cursos as cur', 'cur.id', '=', 'i.curso_id')
-        ->join('turmas as t', 't.id', '=', 'i.turma_id')
-        ->join('municipios as m', 'm.id', '=', 't.municipio_id')
-        ->join('municipios as m_e', 'm_e.id', '=', 'e.municipio_id')
-        ->join('estados as est', 'est.id', '=', 'd.uf_documento')
-        ->orderBy('m.nome')
-        ->orderBy('cot.prioridade')
-        ->orderBy('i.tempo_servico_dias','desc')
-        ->get([
-            'cur.nome as NOME_CURSO',
-            'd.nome as ALUNO',
-            'm.nome as TURMA_PREF',
-            'd.estado_civil as EST_CIVIL',
-            'd.nome as NOME_COMPL',
-            'd.nome as NOME_ABREV',
-            'd.sexo as SEXO',
-            'd.nome_pai as NOME_PAI',
-            'd.nome_mae as NOME_MAE',
-            'd.tipo_documento as RG_TIPO',
-            'd.num_documento as RG_NUM',
-            'd.orgao_emissor_documento as RG_EMISSOR',
-            'est.uf as RG_UF',
-            'd.data_emissao_documento as RG_DTEXP',
-            'd.cpf as CPF',
-            'd.data_nascimento as DT_NASC',
-            'e.logradouro as ENDERECO',
-            'e.num as END_NUM',
-            'e.complemento as END_COMPL',
-            'e.bairro as BAIRRO',
-            'm_e.nome as CIDADE',
-            'e.cep as CEP',
-            'e.celular as FONE',
-            'u.email as EMAIL' 
-        ])->toArray();
+            ->join('users as u', 'u.id', '=', 'i.user_id')
+            ->join('enderecos as e', 'u.id', '=', 'e.user_id')
+            ->join('documentos as d', 'u.id', '=', 'd.user_id')
+            ->join('cotas as cot', 'cot.id', '=', 'i.cota_id')
+            ->join('cursos as cur', 'cur.id', '=', 'i.curso_id')
+            ->join('turmas as t', 't.id', '=', 'i.turma_id')
+            ->join('municipios as m', 'm.id', '=', 't.municipio_id')
+            ->join('municipios as m_e', 'm_e.id', '=', 'e.municipio_id')
+            ->join('estados as est', 'est.id', '=', 'd.uf_documento')
+            ->where('t.id', $turma->id)
+            ->orderBy('m.nome')
+            ->orderBy('cot.prioridade')
+            ->orderBy('i.tempo_servico_dias', 'desc')
+            ->limit($turma->vagas)
+            ->get([
+                'cur.nome as NOME_CURSO',
+                'd.nome as ALUNO',
+                'm.nome as TURMA_PREF',
+                'd.estado_civil as EST_CIVIL',
+                'd.nome as NOME_COMPL',
+                'd.nome as NOME_ABREV',
+                'd.sexo as SEXO',
+                'd.nome_pai as NOME_PAI',
+                'd.nome_mae as NOME_MAE',
+                'd.tipo_documento as RG_TIPO',
+                'd.num_documento as RG_NUM',
+                'd.orgao_emissor_documento as RG_EMISSOR',
+                'est.uf as RG_UF',
+                'd.data_emissao_documento as RG_DTEXP',
+                'd.cpf as CPF',
+                'd.data_nascimento as DT_NASC',
+                'e.logradouro as ENDERECO',
+                'e.num as END_NUM',
+                'e.complemento as END_COMPL',
+                'e.bairro as BAIRRO',
+                'm_e.nome as CIDADE',
+                'e.cep as CEP',
+                'e.celular as FONE',
+                'u.email as EMAIL'
+            ])->toArray();
         return $matriculaData;
     }
-    
-    private function getMatriculaArray(Array $matriculaData): array
+
+    /**
+     * Retorna um array com os dados dos classificados
+     *
+     * @return array
+     **/
+    private function getMatriculas()
+    {
+        $turmas = Turma::all();
+        $matriculaData = array();
+        foreach ($turmas as $turma) {
+            $matriculas = $this->classificaInscritos($turma);
+            asort($matriculas);
+            foreach ($matriculas as $key => $matricula) {
+                array_push($matriculaData, $matricula);
+            }
+        }
+        return $matriculaData;
+    }
+    /**
+     * @param array $matriculaData
+     * @return array
+     **/
+    private function prepareToExport(array $matriculaData): array
     {
         $matriculaArray[] = array(
             'CURSO',
@@ -101,50 +132,48 @@ class MatriculaExport implements FromArray
             'CEP',
             'FONE',
             'EMAIL'
-         );
-    
-         foreach($matriculaData as $matricula)
-         {
-          $matriculaArray[] = array(
-           'CURSO' => '',
-           'NOME_CURSO' => $matricula->NOME_CURSO,
-           'TURNO' => 'LSEST',
-           'CURRICULO' => 'LMEM2020',
-           'UNIDADE_FISICA' => 'EST',
-           'ALUNO' => '',
-           'PESSOA' => '',
-           'SERIE' => 1,
-           'TURMA_PREF' => $matricula->TURMA_PREF,
-           'EST_CIVIL' => $matricula->EST_CIVIL,
-           'DIVIDA_BIBLIO' => 'não',
-           'ANOCONCL_2G' => '',
-           'TIPO_INGRESSO' => 'concurso',
-           'ANO_INGRESSO' => 2020,
-           'SEM_INGRESSO' => '2020_2',
-           'SIT_ALUNO' => 'ativo',
-           'NOME_COMPL' => $matricula->NOME_COMPL,
-           'NOME_ABREV' => $matricula->NOME_ABREV,
-           'SEXO' => $matricula->SEXO,
-           'NOME_PAI' => $matricula->NOME_PAI,
-           'NOME_MAE' => $matricula->NOME_MAE,
-           'RG_TIPO' => $matricula->RG_TIPO,
-           'RG_NUM' => $matricula->RG_NUM,
-           'RG_EMISSOR' => $matricula->RG_EMISSOR,
-           'RG_UF' => $matricula->RG_UF,
-           'RG_DTEXP' => date_format(date_create($matricula->RG_DTEXP),'d/m/Y'),
-           'CPF' => $matricula->CPF,
-           'DT_NASC' => date_format(date_create($matricula->DT_NASC), 'd/m/Y'),
-           'ENDERECO' => $matricula->ENDERECO,
-           'END_NUM' => $matricula->END_NUM,
-           'END_COMPL' => $matricula->END_COMPL,
-           'BAIRRO' => $matricula->BAIRRO,
-           'END_MUNICIPIO' => '',
-           'CIDADE' => $matricula->CIDADE,
-           'CEP' => $matricula->CEP,
-           'FONE' => $matricula->FONE,
-           'EMAIL' => $matricula->EMAIL
-          );
-         }
-         return $matriculaArray;
+        );
+        foreach ($matriculaData as $matricula) {
+            $matriculaArray[] = array(
+                'CURSO' => '',
+                'NOME_CURSO' => $matricula->NOME_CURSO,
+                'TURNO' => 'LSEST',
+                'CURRICULO' => 'LMEM2020',
+                'UNIDADE_FISICA' => 'EST',
+                'ALUNO' => '',
+                'PESSOA' => '',
+                'SERIE' => 1,
+                'TURMA_PREF' => $matricula->TURMA_PREF,
+                'EST_CIVIL' => $matricula->EST_CIVIL,
+                'DIVIDA_BIBLIO' => 'não',
+                'ANOCONCL_2G' => '',
+                'TIPO_INGRESSO' => 'concurso',
+                'ANO_INGRESSO' => 2020,
+                'SEM_INGRESSO' => '2020_2',
+                'SIT_ALUNO' => 'ativo',
+                'NOME_COMPL' => $matricula->NOME_COMPL,
+                'NOME_ABREV' => $matricula->NOME_ABREV,
+                'SEXO' => $matricula->SEXO,
+                'NOME_PAI' => $matricula->NOME_PAI,
+                'NOME_MAE' => $matricula->NOME_MAE,
+                'RG_TIPO' => $matricula->RG_TIPO,
+                'RG_NUM' => $matricula->RG_NUM,
+                'RG_EMISSOR' => $matricula->RG_EMISSOR,
+                'RG_UF' => $matricula->RG_UF,
+                'RG_DTEXP' => date_format(date_create($matricula->RG_DTEXP), 'd/m/Y'),
+                'CPF' => $matricula->CPF,
+                'DT_NASC' => date_format(date_create($matricula->DT_NASC), 'd/m/Y'),
+                'ENDERECO' => $matricula->ENDERECO,
+                'END_NUM' => $matricula->END_NUM,
+                'END_COMPL' => $matricula->END_COMPL,
+                'BAIRRO' => $matricula->BAIRRO,
+                'END_MUNICIPIO' => '',
+                'CIDADE' => $matricula->CIDADE,
+                'CEP' => $matricula->CEP,
+                'FONE' => $matricula->FONE,
+                'EMAIL' => $matricula->EMAIL
+            );
+        }
+        return $matriculaArray;
     }
 }
