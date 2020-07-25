@@ -20,6 +20,7 @@ class TurmasTableSeeder extends Seeder
             Turma::firstOrCreate([
                 'curso_id'=> Curso::where('nome','Matemática')->get()->first()->id,
                 'municipio_id'=> $id,
+                'vagas'=>30
             ]);
         }
 
